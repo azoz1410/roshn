@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="خريطة مواقع المساكن - منصة أين؟ للمساكن الفاخرة">
+    <title>خريطة المساكن - منصة أين؟</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        #map {
+            height: calc(100vh - 80px);
+            width: 100%;
+            border-radius: 0;
+            z-index: 1;
+        }
+        
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: calc(100vh - 80px);
+        }
+        
+        .map-sidebar {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 350px;
+            max-height: calc(100vh - 140px);
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            overflow-y: auto;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+        
+        .map-sidebar h2 {
+            color: #8b5cf6;
+            font-size: 24px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .map-sidebar p {
+            color: #64748b;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .map-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .map-list-item {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .map-list-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+            border-color: #8b5cf6;
+        }
+        
+        .map-list-item.active {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            border-color: #7c3aed;
+        }
+        
+        .map-list-item h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: inherit;
+        }
+        
+        .map-list-item.active h3 {
+            color: white;
+        }
+        
+        .map-list-item .location {
+            font-size: 13px;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .map-list-item.active .location {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .map-list-item .price {
+            font-size: 15px;
+            font-weight: 700;
+            color: #8b5cf6;
+            margin-top: 8px;
+        }
+        
+        .map-list-item.active .price {
+            color: white;
+        }
+        
+        .leaflet-popup-content-wrapper {
+            border-radius: 15px;
+            padding: 0;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .popup-content {
+            padding: 0;
+            min-width: 280px;
+        }
+        
+        .popup-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .popup-body {
+            padding: 20px;
+        }
+        
+        .popup-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+        
+        .popup-location {
+            font-size: 14px;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .popup-details {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .popup-detail {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            color: #475569;
+        }
+        
+        .popup-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: #8b5cf6;
+            margin-bottom: 15px;
+        }
+        
+        .popup-button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .popup-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+        }
+        
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            color: #8b5cf6;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            border: 2px solid rgba(139, 92, 246, 0.2);
+        }
+        
+        .back-button:hover {
+            background: #8b5cf6;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(139, 92, 246, 0.3);
+        }
+        
+        /* Custom marker styles */
+        .custom-marker {
+            border: 3px solid white;
+            border-radius: 50% 50% 50% 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            width: 40px;
+            height: 40px;
+            transform: rotate(-45deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .custom-marker.students {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+        
+        .custom-marker.employees {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        
+        .custom-marker.families {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+        
+        .custom-marker:hover {
+            transform: rotate(-45deg) scale(1.2);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        }
+        
+        .custom-marker-icon {
+            transform: rotate(45deg);
+            color: white;
+            font-size: 18px;
+        }
+        
+        @media (max-width: 768px) {
+            .map-sidebar {
+                width: calc(100% - 40px);
+                max-height: 300px;
+                top: auto;
+                bottom: 20px;
+            }
+            
+            .back-button {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .back-button:hover {
+                transform: translateX(-50%) translateY(-2px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2V7zm16 0V5a2 2 0 00-2-2H7a2 2 0 00-2 2v2h14z" />
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h1>أين؟</h1>
+                    <p>خريطة المساكن</p>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">الرئيسية</a></li>
+                    <li><a href="map.html" class="active">الخريطة</a></li>
+                    <li><a href="#about">عنا</a></li>
+                    <li><a href="#contact">اتصل بنا</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Map Container -->
+    <div class="map-container">
+        <a href="index.html" class="back-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            العودة للرئيسية
+        </a>
+
+        <div class="map-sidebar">
+            <h2>🏠 مساكن مخصصة</h2>
+            <p>اضغط على أي مسكن لرؤية تصنيفه والمرافق القريبة</p>
+            <div class="map-list" id="housesList"></div>
+        </div>
+
+        <div id="map"></div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="houses-data.js"></script>
+    
+    <script>
+        // Initialize the map centered on Riyadh
+        const map = L.map('map').setView([24.7136, 46.6753], 11);
+
+        // Add tile layer (OpenStreetMap)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Get all houses (all are in Riyadh now)
+        const houses = getHouses();
+        const riyadhHouses = houses;
+
+        // Store markers
+        const markers = {};
+
+        // Create custom icon based on category
+        function getCustomIcon(category) {
+            let markerClass = 'families';
+            let icon = '🏠';
+            
+            if (category === 'طلاب') {
+                markerClass = 'students';
+                icon = '🎓';
+            } else if (category === 'موظفين') {
+                markerClass = 'employees';
+                icon = '💼';
+            } else {
+                markerClass = 'families';
+                icon = '👨‍👩‍👧';
+            }
+            
+            return L.divIcon({
+                className: 'custom-div-icon',
+                html: `<div class="custom-marker ${markerClass}"><span class="custom-marker-icon">${icon}</span></div>`,
+                iconSize: [40, 40],
+                iconAnchor: [20, 40],
+                popupAnchor: [0, -40]
+            });
+        }
+
+        // Get category badge
+        function getCategoryBadge(category) {
+            if (category === 'طلاب') {
+                return '<div style="background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; display: inline-block; margin-bottom: 12px;">🎓 سكن مخصص للطلاب</div>';
+            } else if (category === 'موظفين') {
+                return '<div style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; display: inline-block; margin-bottom: 12px;">💼 سكن مخصص للموظفين</div>';
+            } else {
+                return '<div style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; display: inline-block; margin-bottom: 12px;">👨‍👩‍👧‍👦 سكن مخصص للعائلات</div>';
+            }
+        }
+
+        // Create popup content
+        function createPopupContent(house) {
+            const nearbyPlacesHtml = house.nearbyPlaces.map(place => 
+                `<span style="background: #f1f5f9; padding: 4px 10px; border-radius: 12px; font-size: 12px; margin: 3px; display: inline-block;">✓ ${place}</span>`
+            ).join('');
+            
+            return `
+                <div class="popup-content">
+                    <img src="${house.image}" alt="${house.title}" class="popup-image">
+                    <div class="popup-body">
+                        ${getCategoryBadge(house.category)}
+                        <h3 class="popup-title">${house.title}</h3>
+                        <div class="popup-location">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                            </svg>
+                            ${house.location}
+                        </div>
+                        <div style="margin: 12px 0; padding: 12px; background: #f8fafc; border-radius: 10px;">
+                            <div style="font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 8px;">📍 المرافق القريبة:</div>
+                            ${nearbyPlacesHtml}
+                        </div>
+                        <div class="popup-details">
+                            <div class="popup-detail">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 3L4 9v12h5v-7h6v7h5V9l-8-6z"/>
+                                </svg>
+                                ${house.bedrooms} غرف
+                            </div>
+                            <div class="popup-detail">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M9 2v2h6V2h2v2h1a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h1V2h2z"/>
+                                </svg>
+                                ${house.bathrooms} حمام
+                            </div>
+                            <div class="popup-detail">📐 ${house.area} م²</div>
+                        </div>
+                        <div class="popup-price">${formatPrice(house.price)}</div>
+                        <a href="index.html?house=${house.id}" class="popup-button">عرض التفاصيل الكاملة</a>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Add markers for each house
+        riyadhHouses.forEach(house => {
+            const marker = L.marker([house.lat, house.lng], { icon: getCustomIcon(house.category) })
+                .addTo(map)
+                .bindPopup(createPopupContent(house));
+            
+            markers[house.id] = marker;
+            
+            // Add click event
+            marker.on('click', function() {
+                highlightHouseInList(house.id);
+            });
+        });
+
+        // Fly to house on map
+        function flyToHouse(lat, lng, id) {
+            map.flyTo([lat, lng], 13, {
+                animate: true,
+                duration: 1.5
+            });
+            
+            // Open popup after animation
+            setTimeout(() => {
+                markers[id].openPopup();
+            }, 1000);
+            
+            highlightHouseInList(id);
+        }
+
+        // Highlight house in sidebar list
+        function highlightHouseInList(id) {
+            document.querySelectorAll('.map-list-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            const targetItem = document.querySelector(`.map-list-item[data-id="${id}"]`);
+            if (targetItem) {
+                targetItem.classList.add('active');
+            }
+        }
+
+        // Populate sidebar list
+        function populateSidebar() {
+            const listContainer = document.getElementById('housesList');
+            
+            riyadhHouses.forEach(house => {
+                const categoryBadge = getCategoryBadge(house.category);
+                const categoryColor = house.category === 'طلاب' ? '#3b82f6, #2563eb' : 
+                                      (house.category === 'موظفين' ? '#10b981, #059669' : '#f59e0b, #d97706');
+                
+                const categoryText = house.category === 'طلاب' ? '🎓 سكن مخصص للطلاب' :
+                                    (house.category === 'موظفين' ? '💼 سكن مخصص للموظفين' : '👨‍👩‍👧‍👦 سكن مخصص للعائلات');
+                
+                const listItem = document.createElement('div');
+                listItem.className = 'map-list-item';
+                listItem.setAttribute('data-id', house.id);
+                listItem.setAttribute('data-lat', house.lat);
+                listItem.setAttribute('data-lng', house.lng);
+                listItem.setAttribute('data-category', house.category);
+                listItem.onclick = () => flyToHouse(house.lat, house.lng, house.id);
+                
+                listItem.innerHTML = `
+                    <div style="background: linear-gradient(135deg, ${categoryColor}); color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; margin-bottom: 8px;">
+                        ${categoryText}
+                    </div>
+                    <h3>${house.title}</h3>
+                    <div class="location">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                        </svg>
+                        ${house.location}
+                    </div>
+                    <div style="font-size: 12px; color: #64748b; margin: 8px 0;">
+                        <strong>قريب من:</strong> ${house.nearbyPlaces.slice(0, 2).join(' • ')}
+                    </div>
+                    <div class="price">${formatPrice(house.price)}</div>
+                `;
+                
+                listContainer.appendChild(listItem);
+            });
+        }
+
+        // Initialize sidebar
+        populateSidebar();
+
+        // Add smooth animations
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.querySelector('.map-sidebar');
+            sidebar.style.opacity = '0';
+            sidebar.style.transform = 'translateX(50px)';
+            
+            setTimeout(() => {
+                sidebar.style.transition = 'all 0.6s ease';
+                sidebar.style.opacity = '1';
+                sidebar.style.transform = 'translateX(0)';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
