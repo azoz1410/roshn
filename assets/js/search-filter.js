@@ -118,7 +118,7 @@ function updateFacilitiesFilter() {
 }
 
 // Change step
-function changeStep(direction) {
+window.changeStep = function(direction) {
     // Validate current step
     if (direction > 0 && !validateStep(currentStep)) {
         return;
@@ -444,7 +444,7 @@ function getCategoryBadge(category) {
 }
 
 // Reset search
-function resetSearch() {
+window.resetSearch = function() {
     // Reset filter data
     filterData = {
         category: null,

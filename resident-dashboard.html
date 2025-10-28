@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="لوحة تحكم الساكن - منصة أين؟">
+    <title>لوحة تحكم الساكن - منصة أين؟</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <!-- JsBarcode Library -->
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    
+    <style>
+        .dashboard-hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 30px;
+            border-radius: 20px;
+            color: white;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 20s infinite;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-text h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .welcome-text p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        .resident-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .info-card-label {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .info-card-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Cairo', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .dashboard-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            padding: 14px 25px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            color: #64748b;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Cairo', sans-serif;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeInUp 0.4s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .section-header {
+            margin-bottom: 30px;
+        }
+
+        .section-header h2 {
+            color: #1e293b;
+            font-size: 26px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-header p {
+            color: #64748b;
+            font-size: 15px;
+        }
+
+        .visitor-form {
+            max-width: 700px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-group label {
+            display: block;
+            color: #1e293b;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s;
+            font-family: 'Cairo', sans-serif;
+            background: #f8fafc;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .generate-visitor-btn {
+            padding: 16px 40px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Cairo', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .generate-visitor-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        .barcode-result {
+            display: none;
+            margin-top: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-radius: 15px;
+            border: 2px dashed #3b82f6;
+        }
+
+        .barcode-result.show {
+            display: block;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .barcode-result h3 {
+            color: #1e40af;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .barcode-details {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .detail-value {
+            color: #1e293b;
+            font-weight: 700;
+        }
+
+        .barcode-display {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 20px 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .barcode-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .print-btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+        }
+
+        .share-btn {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+        }
+
+        .new-btn {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .visitors-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .visitor-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s;
+        }
+
+        .visitor-card:hover {
+            border-color: #8b5cf6;
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+        }
+
+        .visitor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .visitor-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+
+        .visitor-date {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .status-badge {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #065f46;
+        }
+
+        .status-expired {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            color: #991b1b;
+        }
+
+        .status-used {
+            background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+            color: #3730a3;
+        }
+
+        .visitor-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .visitor-info-item {
+            font-size: 14px;
+        }
+
+        .visitor-info-label {
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+
+        .visitor-info-value {
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+
+        .empty-state-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-hero {
+                padding: 25px 20px;
+            }
+
+            .welcome-text h1 {
+                font-size: 26px;
+            }
+
+            .logout-btn {
+                position: relative;
+                top: auto;
+                left: auto;
+                margin-top: 20px;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .section-card {
+                padding: 25px 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .resident-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .barcode-actions {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            
+            .barcode-result, .barcode-result * {
+                visibility: visible;
+            }
+            
+            .barcode-result {
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 100%;
+                background: white !important;
+                border: none !important;
+            }
+            
+            .barcode-actions {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2V7zm16 0V5a2 2 0 00-2-2H7a2 2 0 00-2 2v2h14z" />
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h1>أين؟</h1>
+                    <p>لوحة تحكم الساكن</p>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">الرئيسية</a></li>
+                    <li><a href="search.html">بحث متقدم</a></li>
+                    <li><a href="map.html">الخريطة</a></li>
+                    <li><a href="resident-dashboard.html" class="active">لوحة التحكم</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Dashboard Hero -->
+        <div class="dashboard-hero">
+            <button class="logout-btn" onclick="logout()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                تسجيل الخروج
+            </button>
+            
+            <div class="hero-content">
+                <div class="welcome-text">
+                    <h1 id="residentName">مرحباً بك</h1>
+                    <p>إدارة الزوار وخدمات السكن</p>
+                </div>
+                
+                <div class="resident-info-grid">
+                    <div class="info-card">
+                        <div class="info-card-label">رقم الوحدة</div>
+                        <div class="info-card-value" id="unitNumber">-</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-label">نوع السكن</div>
+                        <div class="info-card-value" id="houseType">-</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-label">رقم الجوال</div>
+                        <div class="info-card-value" id="phone">-</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-label">البريد الإلكتروني</div>
+                        <div class="info-card-value" id="email">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Tabs -->
+        <div class="dashboard-tabs">
+            <button class="tab-btn active" onclick="switchDashboardTab('newVisitor')">
+                ➕ إضافة زائر جديد
+            </button>
+            <button class="tab-btn" onclick="switchDashboardTab('myVisitors')">
+                👥 زواري (<span id="visitorsCount">0</span>)
+            </button>
+            <button class="tab-btn" onclick="switchDashboardTab('maintenance')">
+                🔧 طلبات الصيانة (<span id="maintenanceCount">0</span>)
+            </button>
+            <button class="tab-btn" onclick="switchDashboardTab('profile')">
+                ⚙️ الإعدادات
+            </button>
+        </div>
+
+        <!-- New Visitor Tab -->
+        <div id="newVisitorTab" class="tab-content active">
+            <div class="section-card">
+                <div class="section-header">
+                    <h2>
+                        <span>🎫</span>
+                        إصدار باركود دخول لزائر
+                    </h2>
+                    <p>قم بتعبئة بيانات الزائر لإصدار باركود دخول خاص به</p>
+                </div>
+
+                <form class="visitor-form" onsubmit="generateVisitorBarcode(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>اسم الزائر *</label>
+                            <input type="text" id="visitorName" required placeholder="الاسم الكامل">
+                        </div>
+                        <div class="form-group">
+                            <label>رقم جوال الزائر *</label>
+                            <input type="tel" id="visitorPhone" required placeholder="05xxxxxxxx">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>تاريخ الزيارة *</label>
+                            <input type="date" id="visitDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>وقت الزيارة المتوقع *</label>
+                            <input type="time" id="visitTime" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>مدة الزيارة (بالساعات) *</label>
+                            <select id="visitDuration" required>
+                                <option value="">اختر المدة</option>
+                                <option value="1">ساعة واحدة</option>
+                                <option value="2">ساعتان</option>
+                                <option value="3">3 ساعات</option>
+                                <option value="4">4 ساعات</option>
+                                <option value="6">6 ساعات</option>
+                                <option value="12">12 ساعة</option>
+                                <option value="24">24 ساعة</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>عدد الزوار</label>
+                            <input type="number" id="visitorsCount" min="1" max="10" value="1">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>ملاحظات إضافية</label>
+                        <textarea id="visitNotes" placeholder="أي معلومات إضافية عن الزيارة..."></textarea>
+                    </div>
+
+                    <button type="submit" class="generate-visitor-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1h-3zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5zM.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5z"/>
+                        </svg>
+                        إصدار الباركود
+                    </button>
+                </form>
+
+                <!-- Barcode Result -->
+                <div id="visitorBarcodeResult" class="barcode-result">
+                    <h3>✅ تم إصدار باركود الزائر بنجاح</h3>
+                    
+                    <div class="barcode-details" id="visitorBarcodeDetails">
+                        <!-- Will be filled by JavaScript -->
+                    </div>
+
+                    <div class="barcode-display">
+                        <svg id="visitorBarcode"></svg>
+                    </div>
+
+                    <div class="barcode-actions">
+                        <button class="action-btn download-btn" onclick="downloadVisitorBarcode()">
+                            📥 تحميل الباركود
+                        </button>
+                        <button class="action-btn print-btn" onclick="printVisitorBarcode()">
+                            🖨️ طباعة الباركود
+                        </button>
+                        <button class="action-btn share-btn" onclick="shareVisitorBarcode()">
+                            📤 مشاركة مع الزائر
+                        </button>
+                        <button class="action-btn new-btn" onclick="resetVisitorForm()">
+                            ➕ زائر جديد
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Visitors Tab -->
+        <div id="myVisitorsTab" class="tab-content">
+            <div class="section-card">
+                <div class="section-header">
+                    <h2>
+                        <span>👥</span>
+                        قائمة الزوار
+                    </h2>
+                    <p>جميع الزوار الذين أصدرت لهم باركودات دخول</p>
+                </div>
+
+                <div id="visitorsList" class="visitors-list">
+                    <!-- Will be filled by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Tab -->
+        <div id="profileTab" class="tab-content">
+            <div class="section-card">
+                <div class="section-header">
+                    <h2>
+                        <span>⚙️</span>
+                        إعدادات الحساب
+                    </h2>
+                    <p>تعديل معلومات حسابك الشخصية</p>
+                </div>
+
+                <form class="visitor-form" onsubmit="updateProfile(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>الاسم الكامل</label>
+                            <input type="text" id="profileName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>رقم الجوال</label>
+                            <input type="tel" id="profilePhone" required disabled>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>البريد الإلكتروني</label>
+                            <input type="email" id="profileEmail" required disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>رقم الوحدة</label>
+                            <input type="text" id="profileUnit" required disabled>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="generate-visitor-btn">
+                        💾 حفظ التغييرات
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>منصة أين؟</h3>
+                <p>منصتك المثالية للبحث عن المساكن الفاخرة</p>
+            </div>
+            <div class="footer-section">
+                <h3>روابط سريعة</h3>
+                <ul>
+                    <li><a href="index.html">الرئيسية</a></li>
+                    <li><a href="search.html">بحث متقدم</a></li>
+                    <li><a href="map.html">الخريطة</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>تواصل معنا</h3>
+                <p>📧 info@ayna.sa</p>
+                <p>📱 +966 50 123 4567</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 منصة أين؟ - جميع الحقوق محفوظة</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/resident-dashboard.js"></script>
+</body>
+</html>
