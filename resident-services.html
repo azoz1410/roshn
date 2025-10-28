@@ -12,14 +12,19 @@
     
     <style>
         .services-hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 60px 20px;
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.95) 0%, rgba(15, 15, 30, 0.98) 100%),
+                        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300"><defs><linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%23b8860b;stop-opacity:0.2"/><stop offset="100%" style="stop-color:%23daa520;stop-opacity:0.1"/></linearGradient></defs><rect fill="url(%23heroGrad)" width="1200" height="300"/></svg>');
+            padding: 70px 20px;
             text-align: center;
             color: white;
             margin-bottom: 40px;
-            border-radius: 20px;
+            border-radius: 25px;
             position: relative;
             overflow: hidden;
+            border: 2px solid rgba(184, 134, 11, 0.3);
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                0 0 80px rgba(184, 134, 11, 0.2);
         }
 
         .services-hero::before {
@@ -29,22 +34,28 @@
             right: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(218, 165, 32, 0.15) 0%, transparent 70%);
             animation: float 20s infinite;
         }
 
         .services-hero h1 {
-            font-size: 42px;
+            font-size: 46px;
             margin-bottom: 15px;
             position: relative;
             z-index: 1;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 900;
         }
 
         .services-hero p {
-            font-size: 18px;
+            font-size: 19px;
             opacity: 0.95;
             position: relative;
             z-index: 1;
+            color: #cbd5e1;
         }
 
         .services-grid {
@@ -55,50 +66,63 @@
         }
 
         .service-card {
-            background: white;
+            background: rgba(26, 26, 46, 0.8);
+            backdrop-filter: blur(20px);
             border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            padding: 35px;
+            box-shadow: 
+                0 15px 50px rgba(0, 0, 0, 0.5),
+                0 0 60px rgba(184, 134, 11, 0.15);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 2px solid transparent;
+            border: 2px solid rgba(184, 134, 11, 0.2);
         }
 
         .service-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.3);
-            border-color: #8b5cf6;
+            box-shadow: 
+                0 25px 70px rgba(0, 0, 0, 0.6),
+                0 0 80px rgba(184, 134, 11, 0.3);
+            border-color: var(--primary-color);
         }
 
         .service-icon {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 15px;
+            width: 75px;
+            height: 75px;
+            background: var(--gradient-gold);
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 20px;
-            font-size: 35px;
+            font-size: 38px;
+            box-shadow: 0 8px 25px rgba(184, 134, 11, 0.4);
         }
 
         .service-card h3 {
-            color: #1e293b;
-            font-size: 22px;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 24px;
             margin-bottom: 12px;
+            font-weight: 900;
         }
 
         .service-card p {
-            color: #64748b;
-            line-height: 1.7;
+            color: #95a5a6;
+            line-height: 1.8;
             font-size: 15px;
         }
 
         .barcode-section {
-            background: white;
+            background: rgba(26, 26, 46, 0.8);
+            backdrop-filter: blur(20px);
             border-radius: 20px;
             padding: 40px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            margin-bottom: 40px;
+            box-shadow: 
+                0 15px 50px rgba(0, 0, 0, 0.5),
+                0 0 60px rgba(184, 134, 11, 0.15);
+            border: 2px solid rgba(184, 134, 11, 0.2);
         }
 
         .barcode-header {
@@ -107,8 +131,11 @@
         }
 
         .barcode-header h2 {
-            color: #1e293b;
-            font-size: 32px;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 34px;
             margin-bottom: 10px;
             display: flex;
             align-items: center;

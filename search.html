@@ -11,15 +11,19 @@
             max-width: 1200px;
             margin: 40px auto;
             padding: 20px;
+            position: relative;
+            z-index: 1;
         }
 
         .filter-wizard {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(26, 26, 46, 0.95);
             backdrop-filter: blur(20px);
             border-radius: 30px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.15);
-            border: 2px solid rgba(139, 92, 246, 0.1);
+            padding: 45px;
+            box-shadow: 
+                0 25px 80px rgba(0, 0, 0, 0.5),
+                0 0 100px rgba(184, 134, 11, 0.2);
+            border: 2px solid rgba(184, 134, 11, 0.3);
         }
 
         .wizard-header {
@@ -28,18 +32,19 @@
         }
 
         .wizard-header h1 {
-            font-size: 36px;
-            color: #8b5cf6;
+            font-size: 40px;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            background: var(--gradient-gold);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            font-weight: 900;
+            letter-spacing: 1px;
         }
 
         .wizard-header p {
-            color: #64748b;
-            font-size: 16px;
+            color: #95a5a6;
+            font-size: 17px;
         }
 
         .wizard-steps {
@@ -54,29 +59,35 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 12px 24px;
-            background: #f1f5f9;
+            padding: 14px 26px;
+            background: rgba(15, 15, 30, 0.6);
             border-radius: 50px;
             font-weight: 600;
-            color: #94a3b8;
+            color: #95a5a6;
             transition: all 0.3s ease;
+            border: 2px solid rgba(184, 134, 11, 0.2);
         }
 
         .step.active {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            background: var(--gradient-gold);
             color: white;
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+            box-shadow: 
+                0 10px 30px rgba(184, 134, 11, 0.4),
+                0 0 40px rgba(218, 165, 32, 0.3);
+            border-color: transparent;
         }
 
         .step.completed {
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
+            border-color: transparent;
+            box-shadow: 0 5px 20px rgba(16, 185, 129, 0.3);
         }
 
         .step-number {
-            width: 30px;
-            height: 30px;
-            background: rgba(255, 255, 255, 0.3);
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -105,10 +116,13 @@
         }
 
         .step-title {
-            font-size: 24px;
-            color: #1e293b;
+            font-size: 26px;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 30px;
-            font-weight: 700;
+            font-weight: 900;
         }
 
         .options-grid {
@@ -119,26 +133,29 @@
         }
 
         .option-card {
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            border: 3px solid transparent;
+            background: rgba(15, 15, 30, 0.6);
+            border: 3px solid rgba(184, 134, 11, 0.3);
             border-radius: 20px;
             padding: 30px 20px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
+            color: #cbd5e1;
         }
 
         .option-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(139, 92, 246, 0.2);
+            box-shadow: 0 15px 40px rgba(184, 134, 11, 0.3);
+            border-color: var(--primary-color);
+            background: rgba(15, 15, 30, 0.8);
         }
 
         .option-card.selected {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-            border-color: #7c3aed;
+            background: var(--gradient-gold);
+            border-color: transparent;
             color: white;
-            box-shadow: 0 15px 40px rgba(139, 92, 246, 0.4);
+            box-shadow: 0 15px 40px rgba(184, 134, 11, 0.5);
         }
 
         .option-icon {
@@ -154,11 +171,11 @@
 
         .option-description {
             font-size: 13px;
-            color: #64748b;
+            color: #95a5a6;
         }
 
         .option-card.selected .option-description {
-            color: rgba(255, 255, 255, 0.9);
+            color: rgba(255, 255, 255, 0.95);
         }
 
         .checkbox-options {
@@ -169,8 +186,8 @@
         }
 
         .checkbox-option {
-            background: #f8fafc;
-            border: 2px solid #e2e8f0;
+            background: rgba(15, 15, 30, 0.5);
+            border: 2px solid rgba(184, 134, 11, 0.3);
             border-radius: 15px;
             padding: 20px;
             display: flex;
@@ -178,15 +195,16 @@
             gap: 15px;
             cursor: pointer;
             transition: all 0.3s ease;
+            color: #cbd5e1;
         }
 
         .checkbox-option:hover {
-            border-color: #8b5cf6;
-            background: #f5f3ff;
+            border-color: var(--primary-color);
+            background: rgba(184, 134, 11, 0.1);
         }
 
         .checkbox-option.selected {
-            background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+            background: linear-gradient(135deg, rgba(184, 134, 11, 0.3) 0%, rgba(218, 165, 32, 0.2) 100%);
             border-color: #8b5cf6;
         }
 
