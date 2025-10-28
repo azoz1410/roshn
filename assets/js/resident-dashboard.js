@@ -65,8 +65,12 @@ window.switchDashboardTab = function(tab) {
         tabs[1].classList.add('active');
         document.getElementById('myVisitorsTab').classList.add('active');
         loadVisitorsList();
-    } else if (tab === 'profile') {
+    } else if (tab === 'maintenance') {
         tabs[2].classList.add('active');
+        document.getElementById('maintenanceTab').classList.add('active');
+        loadMaintenanceRequests();
+    } else if (tab === 'profile') {
+        tabs[3].classList.add('active');
         document.getElementById('profileTab').classList.add('active');
     }
 }
@@ -561,3 +565,272 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+// ============================================
+// MAINTENANCE SYSTEM
+// ============================================
+
+// Maintenance type labels
+const maintenanceTypeLabels = {
+    'plumbing': '🚰 سباكة',
+    'electrical': '⚡ كهرباء',
+    'ac': '❄️ تكييف',
+    'carpentry': '🪚 نجارة',
+    'painting': '🎨 دهان',
+    'appliances': '🔌 أجهزة كهربائية',
+    'doors': '🚪 أبواب ونوافذ',
+    'flooring': '🏠 أرضيات',
+    'garden': '🌳 حدائق',
+    'pest': '🐛 مكافحة حشرات',
+    'other': '🔧 أخرى'
+};
+
+// Priority labels
+const priorityLabels = {
+    'urgent': '🔴 عاجل',
+    'high': '🟠 عالية',
+    'medium': '🟡 متوسطة',
+    'low': '🟢 منخفضة'
+};
+
+// Time slot labels
+const timeSlotLabels = {
+    'morning': '🌅 صباحاً (8:00 - 12:00)',
+    'afternoon': '☀️ ظهراً (12:00 - 16:00)',
+    'evening': '🌆 مساءً (16:00 - 20:00)',
+    'anytime': '⏰ أي وقت'
+};
+
+// Status labels
+const maintenanceStatusLabels = {
+    'pending': 'قيد الانتظار',
+    'confirmed': 'تم التأكيد',
+    'in-progress': 'جاري العمل',
+    'completed': 'مكتمل',
+    'cancelled': 'ملغي'
+};
+
+// Submit maintenance request
+window.submitMaintenanceRequest = function(event) {
+    event.preventDefault();
+    
+    const maintenanceType = document.getElementById('maintenanceType').value;
+    const priority = document.getElementById('maintenancePriority').value;
+    const date = document.getElementById('maintenanceDate').value;
+    const timeSlot = document.getElementById('maintenanceTime').value;
+    const title = document.getElementById('maintenanceTitle').value.trim();
+    const description = document.getElementById('maintenanceDescription').value.trim();
+    const phone = document.getElementById('maintenancePhone').value.trim() || currentResident.phone;
+    const allowEntry = document.getElementById('allowEntry').checked;
+    
+    // Validate
+    if (!maintenanceType || !priority || !date || !timeSlot || !title || !description) {
+        alert('الرجاء ملء جميع الحقول المطلوبة');
+        return;
+    }
+    
+    // Generate request number
+    const timestamp = Date.now();
+    const randomNum = Math.floor(Math.random() * 1000);
+    const requestNumber = `REQ${timestamp}${randomNum}`;
+    
+    // Create maintenance request
+    const request = {
+        id: requestNumber,
+        requestNumber: requestNumber,
+        residentId: currentResident.id,
+        residentName: currentResident.fullName,
+        unitNumber: currentResident.unitNumber,
+        maintenanceType: maintenanceType,
+        priority: priority,
+        preferredDate: date,
+        timeSlot: timeSlot,
+        title: title,
+        description: description,
+        contactPhone: phone,
+        allowEntry: allowEntry,
+        status: 'pending',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        technicianNotes: null,
+        completedAt: null
+    };
+    
+    // Save to localStorage
+    const requests = JSON.parse(localStorage.getItem('maintenanceRequests') || '[]');
+    requests.push(request);
+    localStorage.setItem('maintenanceRequests', JSON.stringify(requests));
+    
+    // Show success message
+    document.getElementById('requestNumber').textContent = requestNumber;
+    document.querySelector('.visitor-form').style.display = 'none';
+    document.getElementById('maintenanceSuccess').style.display = 'block';
+    
+    // Update count
+    updateMaintenanceCount();
+    
+    // Scroll to success message
+    document.getElementById('maintenanceSuccess').scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'center' 
+    });
+    
+    showNotification('✅ تم إرسال طلب الصيانة بنجاح!', 'success');
+    
+    // Load updated list
+    setTimeout(() => {
+        loadMaintenanceRequests();
+    }, 500);
+}
+
+// Reset maintenance form
+window.resetMaintenanceForm = function() {
+    document.querySelector('#maintenanceTab .visitor-form').reset();
+    document.getElementById('maintenanceSuccess').style.display = 'none';
+    document.querySelector('#maintenanceTab .visitor-form').style.display = 'block';
+    
+    // Set minimum date to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('maintenanceDate').min = today;
+    document.getElementById('maintenanceDate').value = today;
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Load maintenance requests
+function loadMaintenanceRequests() {
+    const container = document.getElementById('maintenanceRequestsList');
+    const allRequests = JSON.parse(localStorage.getItem('maintenanceRequests') || '[]');
+    
+    // Filter requests for current resident
+    const myRequests = allRequests.filter(r => r.residentId === currentResident.id);
+    
+    if (myRequests.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">🔧</div>
+                <h3>لا توجد طلبات صيانة</h3>
+                <p>لم تقم بتقديم أي طلبات صيانة بعد</p>
+            </div>
+        `;
+        return;
+    }
+    
+    // Sort by creation date (newest first)
+    myRequests.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    
+    container.innerHTML = myRequests.map(request => {
+        const statusClass = getMaintenanceStatusClass(request.status);
+        
+        return `
+            <div class="maintenance-request-card">
+                <div class="maintenance-header">
+                    <div>
+                        <div class="maintenance-title">${request.title}</div>
+                        <div class="maintenance-request-number">رقم الطلب: ${request.requestNumber}</div>
+                    </div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <span class="maintenance-type-badge">${maintenanceTypeLabels[request.maintenanceType]}</span>
+                        <span class="priority-badge priority-${request.priority}">${priorityLabels[request.priority]}</span>
+                        <span class="maintenance-status-badge status-${statusClass}">${maintenanceStatusLabels[request.status]}</span>
+                    </div>
+                </div>
+                
+                <div class="maintenance-description">
+                    ${request.description}
+                </div>
+                
+                <div class="visitor-info-grid">
+                    <div class="visitor-info-item">
+                        <div class="visitor-info-label">التاريخ المفضل</div>
+                        <div class="visitor-info-value">${formatDate(new Date(request.preferredDate))}</div>
+                    </div>
+                    <div class="visitor-info-item">
+                        <div class="visitor-info-label">الوقت المفضل</div>
+                        <div class="visitor-info-value">${timeSlotLabels[request.timeSlot]}</div>
+                    </div>
+                    <div class="visitor-info-item">
+                        <div class="visitor-info-label">رقم الاتصال</div>
+                        <div class="visitor-info-value">${request.contactPhone}</div>
+                    </div>
+                    <div class="visitor-info-item">
+                        <div class="visitor-info-label">السماح بالدخول</div>
+                        <div class="visitor-info-value">${request.allowEntry ? 'نعم ✅' : 'لا ❌'}</div>
+                    </div>
+                    <div class="visitor-info-item">
+                        <div class="visitor-info-label">تاريخ التقديم</div>
+                        <div class="visitor-info-value">${formatDateTime(new Date(request.createdAt))}</div>
+                    </div>
+                </div>
+                
+                ${request.technicianNotes ? `
+                    <div style="margin-top: 15px; padding: 12px; background: #eff6ff; border-radius: 10px; border-right: 4px solid #3b82f6;">
+                        <div style="font-size: 13px; font-weight: 600; color: #1e40af; margin-bottom: 5px;">📝 ملاحظات الفني:</div>
+                        <div style="font-size: 14px; color: #1e40af;">${request.technicianNotes}</div>
+                    </div>
+                ` : ''}
+                
+                ${request.status === 'pending' ? `
+                    <button onclick="cancelMaintenanceRequest('${request.id}')" style="margin-top: 15px; padding: 10px 20px; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; font-family: 'Cairo', sans-serif;">
+                        ❌ إلغاء الطلب
+                    </button>
+                ` : ''}
+            </div>
+        `;
+    }).join('');
+}
+
+// Get maintenance status class
+function getMaintenanceStatusClass(status) {
+    const classMap = {
+        'pending': 'pending',
+        'confirmed': 'in-progress',
+        'in-progress': 'in-progress',
+        'completed': 'completed',
+        'cancelled': 'cancelled'
+    };
+    return classMap[status] || 'pending';
+}
+
+// Update maintenance count
+function updateMaintenanceCount() {
+    const allRequests = JSON.parse(localStorage.getItem('maintenanceRequests') || '[]');
+    const myRequests = allRequests.filter(r => r.residentId === currentResident.id);
+    document.getElementById('maintenanceCount').textContent = myRequests.length;
+}
+
+// Cancel maintenance request
+window.cancelMaintenanceRequest = function(requestId) {
+    if (!confirm('هل أنت متأكد من إلغاء طلب الصيانة؟')) {
+        return;
+    }
+    
+    const requests = JSON.parse(localStorage.getItem('maintenanceRequests') || '[]');
+    const index = requests.findIndex(r => r.id === requestId);
+    
+    if (index !== -1) {
+        requests[index].status = 'cancelled';
+        requests[index].updatedAt = new Date().toISOString();
+        localStorage.setItem('maintenanceRequests', JSON.stringify(requests));
+        
+        showNotification('✅ تم إلغاء طلب الصيانة', 'success');
+        loadMaintenanceRequests();
+    }
+}
+
+// Initialize maintenance
+document.addEventListener('DOMContentLoaded', function() {
+    // Set minimum date to today for maintenance
+    const today = new Date().toISOString().split('T')[0];
+    const maintenanceDateInput = document.getElementById('maintenanceDate');
+    if (maintenanceDateInput) {
+        maintenanceDateInput.min = today;
+        maintenanceDateInput.value = today;
+    }
+    
+    // Update maintenance count
+    if (currentResident) {
+        updateMaintenanceCount();
+    }
+});
+

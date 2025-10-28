@@ -448,6 +448,115 @@
             margin-bottom: 10px;
         }
 
+        .maintenance-request-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .maintenance-request-card:hover {
+            border-color: #f59e0b;
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.2);
+        }
+
+        .maintenance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .maintenance-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+
+        .maintenance-request-number {
+            font-size: 13px;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .maintenance-type-badge {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+            color: #0c4a6e;
+        }
+
+        .priority-badge {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .priority-urgent {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            color: #991b1b;
+        }
+
+        .priority-high {
+            background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
+            color: #9a3412;
+        }
+
+        .priority-medium {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde047 100%);
+            color: #854d0e;
+        }
+
+        .priority-low {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #065f46;
+        }
+
+        .maintenance-status-badge {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde047 100%);
+            color: #854d0e;
+        }
+
+        .status-in-progress {
+            background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
+            color: #1e3a8a;
+        }
+
+        .status-completed {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #065f46;
+        }
+
+        .status-cancelled {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            color: #374151;
+        }
+
+        .maintenance-description {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            color: #475569;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
         @media (max-width: 768px) {
             .dashboard-hero {
                 padding: 25px 20px;
@@ -701,6 +810,122 @@
 
                 <div id="visitorsList" class="visitors-list">
                     <!-- Will be filled by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Maintenance Tab -->
+        <div id="maintenanceTab" class="tab-content">
+            <div class="section-card">
+                <div class="section-header">
+                    <h2>
+                        <span>🔧</span>
+                        طلب صيانة جديد
+                    </h2>
+                    <p>قم بتعبئة بيانات طلب الصيانة وسيتم التواصل معك في أقرب وقت</p>
+                </div>
+
+                <form class="visitor-form" onsubmit="submitMaintenanceRequest(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>نوع الصيانة *</label>
+                            <select id="maintenanceType" required>
+                                <option value="">اختر نوع الصيانة</option>
+                                <option value="plumbing">🚰 سباكة</option>
+                                <option value="electrical">⚡ كهرباء</option>
+                                <option value="ac">❄️ تكييف</option>
+                                <option value="carpentry">🪚 نجارة</option>
+                                <option value="painting">🎨 دهان</option>
+                                <option value="appliances">🔌 أجهزة كهربائية</option>
+                                <option value="doors">🚪 أبواب ونوافذ</option>
+                                <option value="flooring">🏠 أرضيات</option>
+                                <option value="garden">🌳 حدائق</option>
+                                <option value="pest">🐛 مكافحة حشرات</option>
+                                <option value="other">🔧 أخرى</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>مستوى الأولوية *</label>
+                            <select id="maintenancePriority" required>
+                                <option value="">اختر الأولوية</option>
+                                <option value="urgent">🔴 عاجل (في نفس اليوم)</option>
+                                <option value="high">🟠 عالية (خلال يومين)</option>
+                                <option value="medium">🟡 متوسطة (خلال أسبوع)</option>
+                                <option value="low">🟢 منخفضة (وقت متاح)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>التاريخ المفضل *</label>
+                            <input type="date" id="maintenanceDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>الوقت المفضل *</label>
+                            <select id="maintenanceTime" required>
+                                <option value="">اختر الوقت</option>
+                                <option value="morning">🌅 صباحاً (8:00 - 12:00)</option>
+                                <option value="afternoon">☀️ ظهراً (12:00 - 16:00)</option>
+                                <option value="evening">🌆 مساءً (16:00 - 20:00)</option>
+                                <option value="anytime">⏰ أي وقت</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>عنوان المشكلة *</label>
+                        <input type="text" id="maintenanceTitle" required placeholder="مثال: تسريب ماء في الحمام">
+                    </div>
+
+                    <div class="form-group">
+                        <label>وصف تفصيلي للمشكلة *</label>
+                        <textarea id="maintenanceDescription" required placeholder="اشرح المشكلة بالتفصيل لنتمكن من إرسال الفني المناسب مع الأدوات اللازمة..." rows="5"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>رقم الاتصال (اختياري)</label>
+                        <input type="tel" id="maintenancePhone" placeholder="رقم بديل للتواصل">
+                    </div>
+
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" id="allowEntry" style="width: auto;">
+                            <span>السماح بالدخول في حالة عدم تواجدي</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="generate-visitor-btn" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
+                        </svg>
+                        إرسال طلب الصيانة
+                    </button>
+                </form>
+
+                <!-- Success Message -->
+                <div id="maintenanceSuccess" style="display: none; margin-top: 30px; padding: 30px; background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-radius: 15px; border: 2px solid #10b981; text-align: center;">
+                    <div style="font-size: 60px; margin-bottom: 15px;">✅</div>
+                    <h3 style="color: #065f46; font-size: 24px; margin-bottom: 10px;">تم إرسال طلب الصيانة بنجاح!</h3>
+                    <p style="color: #047857; font-size: 16px; margin-bottom: 20px;">
+                        رقم الطلب: <strong id="requestNumber"></strong>
+                    </p>
+                    <p style="color: #059669; font-size: 14px;">
+                        سيتم التواصل معك خلال 24 ساعة لتأكيد الموعد
+                    </p>
+                    <button onclick="resetMaintenanceForm()" style="margin-top: 20px; padding: 12px 30px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer;">
+                        طلب صيانة جديد
+                    </button>
+                </div>
+
+                <!-- Maintenance Requests List -->
+                <div style="margin-top: 50px;">
+                    <h3 style="color: #1e293b; font-size: 22px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                        <span>📋</span> طلبات الصيانة السابقة
+                    </h3>
+                    <div id="maintenanceRequestsList" class="visitors-list">
+                        <!-- Will be filled by JavaScript -->
+                    </div>
                 </div>
             </div>
         </div>
