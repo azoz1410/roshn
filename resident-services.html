@@ -1,705 +1,878 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="خدمات السكان - منصة أين؟ للمساكن الفاخرة">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="خدمات السكان - منصة أين؟ للمساكن الفاخرة"
+    />
     <title>خدمات السكان - منصة أين؟</title>
-    <link rel="stylesheet" href="assets/css/style.css">
-    
+    <link rel="stylesheet" href="assets/css/style.css" />
+
     <!-- JsBarcode Library for generating barcodes -->
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
-    
+
     <style>
-        .services-hero {
-            background: linear-gradient(135deg, rgba(26, 26, 46, 0.95) 0%, rgba(15, 15, 30, 0.98) 100%),
-                        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300"><defs><linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%23b8860b;stop-opacity:0.2"/><stop offset="100%" style="stop-color:%23daa520;stop-opacity:0.1"/></linearGradient></defs><rect fill="url(%23heroGrad)" width="1200" height="300"/></svg>');
-            padding: 70px 20px;
-            text-align: center;
-            color: white;
-            margin-bottom: 40px;
-            border-radius: 25px;
-            position: relative;
-            overflow: hidden;
-            border: 2px solid rgba(184, 134, 11, 0.3);
-            box-shadow: 
-                0 20px 60px rgba(0, 0, 0, 0.5),
-                0 0 80px rgba(184, 134, 11, 0.2);
-        }
+      .services-hero {
+        background: linear-gradient(
+            135deg,
+            rgba(26, 26, 46, 0.95) 0%,
+            rgba(15, 15, 30, 0.98) 100%
+          ),
+          url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300"><defs><linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%23b8860b;stop-opacity:0.2"/><stop offset="100%" style="stop-color:%23daa520;stop-opacity:0.1"/></linearGradient></defs><rect fill="url(%23heroGrad)" width="1200" height="300"/></svg>');
+        padding: 70px 20px;
+        text-align: center;
+        color: white;
+        margin-bottom: 40px;
+        border-radius: 25px;
+        position: relative;
+        overflow: hidden;
+        border: 2px solid rgba(184, 134, 11, 0.3);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
+          0 0 80px rgba(184, 134, 11, 0.2);
+      }
 
-        .services-hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(218, 165, 32, 0.15) 0%, transparent 70%);
-            animation: float 20s infinite;
-        }
+      .services-hero::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle,
+          rgba(218, 165, 32, 0.15) 0%,
+          transparent 70%
+        );
+        animation: float 20s infinite;
+      }
 
+      .services-hero h1 {
+        font-size: 46px;
+        margin-bottom: 15px;
+        position: relative;
+        z-index: 1;
+        background: var(--gradient-gold);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 900;
+      }
+
+      .services-hero p {
+        font-size: 19px;
+        opacity: 0.95;
+        position: relative;
+        z-index: 1;
+        color: #cbd5e1;
+      }
+
+      .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 30px;
+        margin-bottom: 40px;
+      }
+
+      .service-card {
+        background: rgba(26, 26, 46, 0.8);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 35px;
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5),
+          0 0 60px rgba(184, 134, 11, 0.15);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 2px solid rgba(184, 134, 11, 0.2);
+      }
+
+      .service-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6),
+          0 0 80px rgba(184, 134, 11, 0.3);
+        border-color: var(--primary-color);
+      }
+
+      .service-icon {
+        width: 75px;
+        height: 75px;
+        background: var(--gradient-gold);
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        font-size: 38px;
+        box-shadow: 0 8px 25px rgba(184, 134, 11, 0.4);
+      }
+
+      .service-card h3 {
+        background: var(--gradient-gold);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 24px;
+        margin-bottom: 12px;
+        font-weight: 900;
+      }
+
+      .service-card p {
+        color: #95a5a6;
+        line-height: 1.8;
+        font-size: 15px;
+      }
+
+      .barcode-section {
+        background: rgba(26, 26, 46, 0.8);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5),
+          0 0 60px rgba(184, 134, 11, 0.15);
+        border: 2px solid rgba(184, 134, 11, 0.2);
+      }
+
+      .barcode-header {
+        text-align: center;
+        margin-bottom: 35px;
+      }
+
+      .barcode-header h2 {
+        background: var(--gradient-gold);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 34px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .barcode-header p {
+        color: #95a5a6;
+        font-size: 16px;
+      }
+
+      .barcode-form {
+        max-width: 600px;
+        margin: 0 auto 30px;
+      }
+
+      .form-group {
+        margin-bottom: 25px;
+      }
+
+      .form-group label {
+        display: block;
+        color: #ffffff;
+        font-weight: 600;
+        margin-bottom: 10px;
+        font-size: 15px;
+      }
+
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 14px 18px;
+        border: 2px solid rgba(184, 134, 11, 0.3);
+        border-radius: 12px;
+        font-size: 15px;
+        transition: all 0.3s;
+        font-family: "Cairo", sans-serif;
+        background: rgba(15, 15, 30, 0.6);
+        color: #ffffff;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        background: rgba(15, 15, 30, 0.8);
+        box-shadow: 0 0 0 4px rgba(184, 134, 11, 0.2);
+      }
+
+      .generate-btn {
+        width: 100%;
+        padding: 16px;
+        background: var(--gradient-gold);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 18px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        font-family: "Cairo", sans-serif;
+        box-shadow: 0 8px 25px rgba(184, 134, 11, 0.4);
+      }
+
+      .generate-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(184, 134, 11, 0.5);
+      }
+
+      .generate-btn:active {
+        transform: translateY(0);
+      }
+
+      .barcode-display {
+        display: none;
+        background: rgba(26, 26, 46, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 40px;
+        text-align: center;
+        margin-top: 30px;
+        border: 3px dashed rgba(184, 134, 11, 0.5);
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5),
+          0 0 60px rgba(184, 134, 11, 0.2);
+      }
+
+      .barcode-display.active {
+        display: block;
+        animation: fadeInUp 0.6s ease;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .barcode-info {
+        margin-bottom: 25px;
+      }
+
+      .barcode-info h3 {
+        background: var(--gradient-gold);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 24px;
+        margin-bottom: 10px;
+        font-weight: 900;
+      }
+
+      .barcode-details {
+        background: rgba(15, 15, 30, 0.8);
+        border: 2px solid rgba(184, 134, 11, 0.3);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 25px;
+        display: inline-block;
+        text-align: right;
+      }
+
+      .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(184, 134, 11, 0.2);
+      }
+
+      .detail-row:last-child {
+        border-bottom: none;
+      }
+
+      .detail-label {
+        color: #95a5a6;
+        font-weight: 600;
+        margin-left: 30px;
+      }
+
+      .detail-value {
+        color: #daa520;
+        font-weight: 700;
+      }
+
+      .barcode-container {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        margin: 25px auto;
+        display: inline-block;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      #barcode {
+        max-width: 100%;
+        height: auto;
+      }
+
+      .barcode-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 25px;
+      }
+
+      .action-btn {
+        padding: 12px 30px;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: "Cairo", sans-serif;
+      }
+
+      .download-btn {
+        background: var(--gradient-gold);
+        color: white;
+      }
+
+      .download-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(184, 134, 11, 0.4);
+      }
+
+      .print-btn {
+        background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+        color: white;
+      }
+
+      .print-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(218, 165, 32, 0.4);
+      }
+
+      .new-btn {
+        background: linear-gradient(135deg, #8b6914 0%, #b8860b 100%);
+        color: white;
+      }
+
+      .new-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(139, 105, 20, 0.4);
+      }
+
+      .validity-badge {
+        display: inline-block;
+        background: var(--gradient-gold);
+        color: white;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+        margin-top: 15px;
+        box-shadow: 0 4px 15px rgba(184, 134, 11, 0.4);
+      }
+
+      .info-alert {
+        background: rgba(26, 26, 46, 0.8);
+        backdrop-filter: blur(20px);
+        border: 2px solid rgba(184, 134, 11, 0.3);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: start;
+        gap: 15px;
+      }
+
+      .info-alert-icon {
+        font-size: 24px;
+        flex-shrink: 0;
+      }
+
+      .info-alert-content h4 {
+        color: #daa520;
+        font-size: 16px;
+        margin-bottom: 8px;
+        font-weight: 700;
+      }
+
+      .info-alert-content ul {
+        color: #cbd5e1;
+        font-size: 14px;
+        line-height: 1.8;
+        padding-right: 20px;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-top: 40px;
+      }
+
+      .stat-card {
+        background: var(--gradient-gold);
+        color: white;
+        padding: 25px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(184, 134, 11, 0.3);
+      }
+
+      .stat-number {
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 5px;
+      }
+
+      .stat-label {
+        font-size: 14px;
+        opacity: 0.9;
+      }
+
+      @media (max-width: 768px) {
         .services-hero h1 {
-            font-size: 46px;
-            margin-bottom: 15px;
-            position: relative;
-            z-index: 1;
-            background: var(--gradient-gold);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 900;
-        }
-
-        .services-hero p {
-            font-size: 19px;
-            opacity: 0.95;
-            position: relative;
-            z-index: 1;
-            color: #cbd5e1;
+          font-size: 32px;
         }
 
         .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
-        .service-card {
-            background: rgba(26, 26, 46, 0.8);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 35px;
-            box-shadow: 
-                0 15px 50px rgba(0, 0, 0, 0.5),
-                0 0 60px rgba(184, 134, 11, 0.15);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 2px solid rgba(184, 134, 11, 0.2);
-        }
-
-        .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 
-                0 25px 70px rgba(0, 0, 0, 0.6),
-                0 0 80px rgba(184, 134, 11, 0.3);
-            border-color: var(--primary-color);
-        }
-
-        .service-icon {
-            width: 75px;
-            height: 75px;
-            background: var(--gradient-gold);
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            font-size: 38px;
-            box-shadow: 0 8px 25px rgba(184, 134, 11, 0.4);
-        }
-
-        .service-card h3 {
-            background: var(--gradient-gold);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: 24px;
-            margin-bottom: 12px;
-            font-weight: 900;
-        }
-
-        .service-card p {
-            color: #95a5a6;
-            line-height: 1.8;
-            font-size: 15px;
+          grid-template-columns: 1fr;
         }
 
         .barcode-section {
-            background: rgba(26, 26, 46, 0.8);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 
-                0 15px 50px rgba(0, 0, 0, 0.5),
-                0 0 60px rgba(184, 134, 11, 0.15);
-            border: 2px solid rgba(184, 134, 11, 0.2);
-        }
-
-        .barcode-header {
-            text-align: center;
-            margin-bottom: 35px;
-        }
-
-        .barcode-header h2 {
-            background: var(--gradient-gold);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: 34px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .barcode-header p {
-            color: #64748b;
-            font-size: 16px;
-        }
-
-        .barcode-form {
-            max-width: 600px;
-            margin: 0 auto 30px;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        .form-group label {
-            display: block;
-            color: #1e293b;
-            font-weight: 600;
-            margin-bottom: 10px;
-            font-size: 15px;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 14px 18px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 15px;
-            transition: all 0.3s;
-            font-family: 'Cairo', sans-serif;
-            background: #f8fafc;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #8b5cf6;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
-        }
-
-        .generate-btn {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-family: 'Cairo', sans-serif;
-        }
-
-        .generate-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
-        }
-
-        .generate-btn:active {
-            transform: translateY(0);
-        }
-
-        .barcode-display {
-            display: none;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            border-radius: 20px;
-            padding: 40px;
-            text-align: center;
-            margin-top: 30px;
-            border: 3px dashed #8b5cf6;
-        }
-
-        .barcode-display.active {
-            display: block;
-            animation: fadeInUp 0.6s ease;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .barcode-info {
-            margin-bottom: 25px;
-        }
-
-        .barcode-info h3 {
-            color: #1e293b;
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .barcode-details {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 25px;
-            display: inline-block;
-            text-align: right;
-        }
-
-        .detail-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .detail-row:last-child {
-            border-bottom: none;
-        }
-
-        .detail-label {
-            color: #64748b;
-            font-weight: 600;
-            margin-left: 30px;
-        }
-
-        .detail-value {
-            color: #1e293b;
-            font-weight: 700;
-        }
-
-        .barcode-container {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            margin: 25px auto;
-            display: inline-block;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        #barcode {
-            max-width: 100%;
-            height: auto;
+          padding: 25px;
         }
 
         .barcode-actions {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 25px;
+          flex-direction: column;
         }
 
         .action-btn {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-family: 'Cairo', sans-serif;
+          width: 100%;
+          justify-content: center;
+        }
+      }
+
+      /* Print styles */
+      @media print {
+        body * {
+          visibility: hidden;
         }
 
-        .download-btn {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
+        .barcode-display,
+        .barcode-display * {
+          visibility: visible;
         }
 
-        .download-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        .barcode-display {
+          position: absolute;
+          right: 0;
+          top: 0;
+          width: 100%;
+          background: white !important;
+          border: none !important;
         }
 
-        .print-btn {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            color: white;
+        .barcode-actions {
+          display: none !important;
         }
-
-        .print-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
-        }
-
-        .new-btn {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            color: white;
-        }
-
-        .new-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
-        }
-
-        .validity-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            margin-top: 15px;
-        }
-
-        .info-alert {
-            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-            border: 2px solid #3b82f6;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: start;
-            gap: 15px;
-        }
-
-        .info-alert-icon {
-            font-size: 24px;
-            flex-shrink: 0;
-        }
-
-        .info-alert-content h4 {
-            color: #1e40af;
-            font-size: 16px;
-            margin-bottom: 8px;
-        }
-
-        .info-alert-content ul {
-            color: #1e40af;
-            font-size: 14px;
-            line-height: 1.8;
-            padding-right: 20px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 40px;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        @media (max-width: 768px) {
-            .services-hero h1 {
-                font-size: 32px;
-            }
-
-            .services-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .barcode-section {
-                padding: 25px;
-            }
-
-            .barcode-actions {
-                flex-direction: column;
-            }
-
-            .action-btn {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-
-        /* Print styles */
-        @media print {
-            body * {
-                visibility: hidden;
-            }
-            
-            .barcode-display, .barcode-display * {
-                visibility: visible;
-            }
-            
-            .barcode-display {
-                position: absolute;
-                right: 0;
-                top: 0;
-                width: 100%;
-                background: white !important;
-                border: none !important;
-            }
-            
-            .barcode-actions {
-                display: none !important;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <!-- Header -->
     <header>
-        <div class="header-container">
-            <div class="logo">
-                <div class="logo-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2V7zm16 0V5a2 2 0 00-2-2H7a2 2 0 00-2 2v2h14z" />
-                    </svg>
-                </div>
-                <div class="logo-text">
-                    <h1>أين؟</h1>
-                    <p>خدمات السكان</p>
-                </div>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="index.html">الرئيسية</a></li>
-                    <li><a href="search.html">بحث متقدم</a></li>
-                    <li><a href="map.html">الخريطة</a></li>
-                    <li><a href="resident-services.html" class="active">خدمات السكان</a></li>
-                    <li><a href="resident-login.html">تسجيل دخول</a></li>
-                </ul>
-            </nav>
+      <div class="header-container">
+        <div class="logo">
+          <div class="logo-icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2V7zm16 0V5a2 2 0 00-2-2H7a2 2 0 00-2 2v2h14z"
+              />
+            </svg>
+          </div>
+          <div class="logo-text">
+            <h1>أين؟</h1>
+            <p>خدمات السكان</p>
+          </div>
         </div>
+        <nav>
+          <ul>
+            <li><a href="index.html">الرئيسية</a></li>
+            <li><a href="search.html">بحث متقدم</a></li>
+            <li><a href="map.html">الخريطة</a></li>
+            <li>
+              <a href="resident-services.html" class="active">خدمات السكان</a>
+            </li>
+            <li><a href="resident-login.html">تسجيل دخول</a></li>
+          </ul>
+        </nav>
+      </div>
     </header>
 
     <div class="container">
-        <!-- Hero Section -->
-        <div class="services-hero">
-            <h1>🏠 خدمات السكان</h1>
-            <p>نظام متكامل لإدارة دخول وخروج السكان بشكل آمن وسهل</p>
+      <!-- Hero Section -->
+      <div class="services-hero">
+        <h1>🏠 خدمات السكان</h1>
+        <p>نظام متكامل لإدارة دخول وخروج السكان بشكل آمن وسهل</p>
+      </div>
+
+      <!-- Quick Access Buttons -->
+      <div
+        style="
+          display: flex;
+          gap: 20px;
+          justify-content: center;
+          margin-bottom: 40px;
+          flex-wrap: wrap;
+        "
+      >
+        <a
+          href="resident-login.html"
+          style="
+            padding: 16px 40px;
+            background: var(--gradient-gold);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 18px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 8px 25px rgba(184, 134, 11, 0.4);
+          "
+          onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 35px rgba(184, 134, 11, 0.5)'"
+          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(184, 134, 11, 0.4)'"
+        >
+          👤 تسجيل دخول السكان
+        </a>
+        <a
+          href="resident-dashboard.html"
+          style="
+            padding: 16px 40px;
+            background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 18px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 8px 25px rgba(218, 165, 32, 0.4);
+          "
+          onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 35px rgba(218, 165, 32, 0.5)'"
+          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(218, 165, 32, 0.4)'"
+        >
+          🎫 إصدار باركود للزوار
+        </a>
+      </div>
+
+      <!-- Info Alert -->
+      <div class="info-alert">
+        <div class="info-alert-icon">ℹ️</div>
+        <div class="info-alert-content">
+          <h4>معلومات مهمة عن نظام الباركود:</h4>
+          <ul>
+            <li>يتم إنشاء باركود فريد لكل عملية دخول</li>
+            <li>الباركود صالح لمدة 24 ساعة من وقت الإنشاء</li>
+            <li>يمكن طباعة أو تحميل الباركود للاستخدام عند البوابة</li>
+            <li>يتم تسجيل جميع عمليات الدخول والخروج تلقائياً</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Services Grid -->
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon">🔐</div>
+          <h3>الدخول الآمن</h3>
+          <p>
+            نظام دخول متطور يعتمد على الباركود الذكي لضمان أمان السكن وسهولة
+            الوصول
+          </p>
         </div>
 
-        <!-- Quick Access Buttons -->
-        <div style="display: flex; gap: 20px; justify-content: center; margin-bottom: 40px; flex-wrap: wrap;">
-            <a href="resident-login.html" style="padding: 16px 40px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 18px; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s; box-shadow: 0 5px 20px rgba(16, 185, 129, 0.3);">
-                👤 تسجيل دخول السكان
-            </a>
-            <a href="resident-dashboard.html" style="padding: 16px 40px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 18px; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s; box-shadow: 0 5px 20px rgba(59, 130, 246, 0.3);">
-                🎫 إصدار باركود للزوار
-            </a>
+        <div class="service-card">
+          <div class="service-icon">📊</div>
+          <h3>تتبع الحضور</h3>
+          <p>
+            تسجيل تلقائي لجميع عمليات الدخول والخروج مع إمكانية الاطلاع على
+            السجل الكامل
+          </p>
         </div>
 
-        <!-- Info Alert -->
-        <div class="info-alert">
-            <div class="info-alert-icon">ℹ️</div>
-            <div class="info-alert-content">
-                <h4>معلومات مهمة عن نظام الباركود:</h4>
-                <ul>
-                    <li>يتم إنشاء باركود فريد لكل عملية دخول</li>
-                    <li>الباركود صالح لمدة 24 ساعة من وقت الإنشاء</li>
-                    <li>يمكن طباعة أو تحميل الباركود للاستخدام عند البوابة</li>
-                    <li>يتم تسجيل جميع عمليات الدخول والخروج تلقائياً</li>
-                </ul>
-            </div>
+        <div class="service-card">
+          <div class="service-icon">👥</div>
+          <h3>إدارة الزوار</h3>
+          <p>إنشاء أكواد دخول مؤقتة للزوار مع تحديد مدة الصلاحية بشكل مرن</p>
         </div>
 
-        <!-- Services Grid -->
-        <div class="services-grid">
-            <div class="service-card">
-                <div class="service-icon">🔐</div>
-                <h3>الدخول الآمن</h3>
-                <p>نظام دخول متطور يعتمد على الباركود الذكي لضمان أمان السكن وسهولة الوصول</p>
-            </div>
+        <div class="service-card">
+          <div class="service-icon">📱</div>
+          <h3>استخدام سهل</h3>
+          <p>واجهة بسيطة وسهلة الاستخدام من أي جهاز محمول أو كمبيوتر</p>
+        </div>
+      </div>
 
-            <div class="service-card">
-                <div class="service-icon">📊</div>
-                <h3>تتبع الحضور</h3>
-                <p>تسجيل تلقائي لجميع عمليات الدخول والخروج مع إمكانية الاطلاع على السجل الكامل</p>
-            </div>
-
-            <div class="service-card">
-                <div class="service-icon">👥</div>
-                <h3>إدارة الزوار</h3>
-                <p>إنشاء أكواد دخول مؤقتة للزوار مع تحديد مدة الصلاحية بشكل مرن</p>
-            </div>
-
-            <div class="service-card">
-                <div class="service-icon">📱</div>
-                <h3>استخدام سهل</h3>
-                <p>واجهة بسيطة وسهلة الاستخدام من أي جهاز محمول أو كمبيوتر</p>
-            </div>
+      <!-- Barcode Generation Section -->
+      <div class="barcode-section">
+        <div class="barcode-header">
+          <h2>
+            <span>🎫</span>
+            إنشاء باركود دخول جديد
+          </h2>
+          <p>املأ البيانات أدناه للحصول على باركود دخول مخصص</p>
         </div>
 
-        <!-- Barcode Generation Section -->
-        <div class="barcode-section">
-            <div class="barcode-header">
-                <h2>
-                    <span>🎫</span>
-                    إنشاء باركود دخول جديد
-                </h2>
-                <p>املأ البيانات أدناه للحصول على باركود دخول مخصص</p>
-            </div>
+        <form class="barcode-form" id="barcodeForm">
+          <div class="form-group">
+            <label for="residentName">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+                style="display: inline; margin-left: 5px"
+              >
+                <path
+                  d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"
+                />
+              </svg>
+              اسم الساكن أو الزائر
+            </label>
+            <input
+              type="text"
+              id="residentName"
+              placeholder="أدخل الاسم الكامل"
+              required
+            />
+          </div>
 
-            <form class="barcode-form" id="barcodeForm">
-                <div class="form-group">
-                    <label for="residentName">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="display: inline; margin-left: 5px;">
-                            <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
-                        </svg>
-                        اسم الساكن أو الزائر
-                    </label>
-                    <input type="text" id="residentName" placeholder="أدخل الاسم الكامل" required>
-                </div>
+          <div class="form-group">
+            <label for="unitNumber">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+                style="display: inline; margin-left: 5px"
+              >
+                <path
+                  d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5z"
+                />
+              </svg>
+              رقم الوحدة السكنية
+            </label>
+            <input
+              type="text"
+              id="unitNumber"
+              placeholder="مثال: A-101"
+              required
+            />
+          </div>
 
-                <div class="form-group">
-                    <label for="unitNumber">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="display: inline; margin-left: 5px;">
-                            <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5z"/>
-                        </svg>
-                        رقم الوحدة السكنية
-                    </label>
-                    <input type="text" id="unitNumber" placeholder="مثال: A-101" required>
-                </div>
+          <div class="form-group">
+            <label for="entryType">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+                style="display: inline; margin-left: 5px"
+              >
+                <path
+                  d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5v-7zm1.294 7.456A1.999 1.999 0 0 1 4.732 11h5.536a2.01 2.01 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456z"
+                />
+              </svg>
+              نوع الدخول
+            </label>
+            <select id="entryType" required>
+              <option value="">اختر نوع الدخول</option>
+              <option value="resident">ساكن دائم</option>
+              <option value="visitor">زائر</option>
+              <option value="delivery">توصيل</option>
+              <option value="maintenance">صيانة</option>
+            </select>
+          </div>
 
-                <div class="form-group">
-                    <label for="entryType">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="display: inline; margin-left: 5px;">
-                            <path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5v-7zm1.294 7.456A1.999 1.999 0 0 1 4.732 11h5.536a2.01 2.01 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456z"/>
-                        </svg>
-                        نوع الدخول
-                    </label>
-                    <select id="entryType" required>
-                        <option value="">اختر نوع الدخول</option>
-                        <option value="resident">ساكن دائم</option>
-                        <option value="visitor">زائر</option>
-                        <option value="delivery">توصيل</option>
-                        <option value="maintenance">صيانة</option>
-                    </select>
-                </div>
+          <div class="form-group">
+            <label for="phoneNumber">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+                style="display: inline; margin-left: 5px"
+              >
+                <path
+                  d="M1 2a1 1 0 0 1 1-1h2.5a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2zm0 5a1 1 0 0 1 1-1h2.5a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V7zm0 5a1 1 0 0 1 1-1h2.5a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-2z"
+                />
+              </svg>
+              رقم الجوال
+            </label>
+            <input
+              type="tel"
+              id="phoneNumber"
+              placeholder="05xxxxxxxx"
+              required
+            />
+          </div>
 
-                <div class="form-group">
-                    <label for="phoneNumber">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="display: inline; margin-left: 5px;">
-                            <path d="M1 2a1 1 0 0 1 1-1h2.5a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2zm0 5a1 1 0 0 1 1-1h2.5a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V7zm0 5a1 1 0 0 1 1-1h2.5a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-2z"/>
-                        </svg>
-                        رقم الجوال
-                    </label>
-                    <input type="tel" id="phoneNumber" placeholder="05xxxxxxxx" required>
-                </div>
+          <button type="submit" class="generate-btn">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="currentColor"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1h-3zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5zM.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5z"
+              />
+            </svg>
+            إنشاء الباركود
+          </button>
+        </form>
 
-                <button type="submit" class="generate-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1h-3zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5zM.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5z"/>
-                    </svg>
-                    إنشاء الباركود
-                </button>
-            </form>
+        <!-- Barcode Display -->
+        <div class="barcode-display" id="barcodeDisplay">
+          <div class="barcode-info">
+            <h3>✅ تم إنشاء الباركود بنجاح</h3>
+            <p style="color: #64748b; margin-top: 10px">
+              استخدم هذا الباركود عند بوابة الدخول
+            </p>
+          </div>
 
-            <!-- Barcode Display -->
-            <div class="barcode-display" id="barcodeDisplay">
-                <div class="barcode-info">
-                    <h3>✅ تم إنشاء الباركود بنجاح</h3>
-                    <p style="color: #64748b; margin-top: 10px;">استخدم هذا الباركود عند بوابة الدخول</p>
-                </div>
+          <div class="barcode-details" id="barcodeDetails">
+            <!-- Will be filled by JavaScript -->
+          </div>
 
-                <div class="barcode-details" id="barcodeDetails">
-                    <!-- Will be filled by JavaScript -->
-                </div>
+          <div class="barcode-container">
+            <svg id="barcode"></svg>
+          </div>
 
-                <div class="barcode-container">
-                    <svg id="barcode"></svg>
-                </div>
+          <div class="validity-badge" id="validityBadge">
+            صالح حتى: <span id="expiryTime"></span>
+          </div>
 
-                <div class="validity-badge" id="validityBadge">
-                    صالح حتى: <span id="expiryTime"></span>
-                </div>
+          <div class="barcode-actions">
+            <button class="action-btn download-btn" onclick="downloadBarcode()">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"
+                />
+                <path
+                  d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"
+                />
+              </svg>
+              تحميل الباركود
+            </button>
 
-                <div class="barcode-actions">
-                    <button class="action-btn download-btn" onclick="downloadBarcode()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                            <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-                        </svg>
-                        تحميل الباركود
-                    </button>
+            <button class="action-btn print-btn" onclick="printBarcode()">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+              >
+                <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z" />
+                <path
+                  d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"
+                />
+              </svg>
+              طباعة الباركود
+            </button>
 
-                    <button class="action-btn print-btn" onclick="printBarcode()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
-                            <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
-                        </svg>
-                        طباعة الباركود
-                    </button>
-
-                    <button class="action-btn new-btn" onclick="resetForm()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
-                            <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
-                        </svg>
-                        إنشاء باركود جديد
-                    </button>
-                </div>
-            </div>
+            <button class="action-btn new-btn" onclick="resetForm()">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"
+                />
+                <path
+                  d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"
+                />
+              </svg>
+              إنشاء باركود جديد
+            </button>
+          </div>
         </div>
+      </div>
 
-        <!-- Statistics -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number" id="totalBarcodes">247</div>
-                <div class="stat-label">إجمالي الباركودات المنشأة</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="activeBarcodes">89</div>
-                <div class="stat-label">باركود نشط حالياً</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="todayEntries">34</div>
-                <div class="stat-label">عمليات دخول اليوم</div>
-            </div>
+      <!-- Statistics -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number" id="totalBarcodes">247</div>
+          <div class="stat-label">إجمالي الباركودات المنشأة</div>
         </div>
+        <div class="stat-card">
+          <div class="stat-number" id="activeBarcodes">89</div>
+          <div class="stat-label">باركود نشط حالياً</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="todayEntries">34</div>
+          <div class="stat-label">عمليات دخول اليوم</div>
+        </div>
+      </div>
     </div>
 
     <!-- Footer -->
     <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>منصة أين؟</h3>
-                <p>منصتك المثالية للبحث عن المساكن الفاخرة</p>
-            </div>
-            <div class="footer-section">
-                <h3>روابط سريعة</h3>
-                <ul>
-                    <li><a href="index.html">الرئيسية</a></li>
-                    <li><a href="search.html">بحث متقدم</a></li>
-                    <li><a href="map.html">الخريطة</a></li>
-                    <li><a href="resident-services.html">خدمات السكان</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>تواصل معنا</h3>
-                <p>📧 info@ayna.sa</p>
-                <p>📱 +966 50 123 4567</p>
-            </div>
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>منصة أين؟</h3>
+          <p>منصتك المثالية للبحث عن المساكن الفاخرة</p>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2025 منصة أين؟ - جميع الحقوق محفوظة</p>
+        <div class="footer-section">
+          <h3>روابط سريعة</h3>
+          <ul>
+            <li><a href="index.html">الرئيسية</a></li>
+            <li><a href="search.html">بحث متقدم</a></li>
+            <li><a href="map.html">الخريطة</a></li>
+            <li><a href="resident-services.html">خدمات السكان</a></li>
+          </ul>
         </div>
+        <div class="footer-section">
+          <h3>تواصل معنا</h3>
+          <p>📧 info@ayna.sa</p>
+          <p>📱 +966 50 123 4567</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 منصة أين؟ - جميع الحقوق محفوظة</p>
+      </div>
     </footer>
 
     <script src="assets/js/resident-services.js"></script>
-</body>
+  </body>
 </html>
